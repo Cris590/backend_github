@@ -1,7 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { GetBranchInterface } from 'src/interfaces/github.interfaces';
-// import {GetBranchInterface} from '../../../interfaces/github.interfaces'
 
 @Injectable()
 export class GithubService {
@@ -11,34 +11,29 @@ export class GithubService {
   constructor() {
     this.owner = 'Cris590';
     this.octokit = new Octokit({
-      auth: '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',
+      auth: process.env.GITHUB_TOKEN,
     });
-  }
-
-  async getUserInfo(username: string) {
-    const response = await this.octokit.users.getByUsername({
-      username: username,
-    });
-    return response.data;
   }
 
   // eslint-disable-next-line prettier/prettier
   async getBranches(repo:string) {
     try {
+      if ( repo !== 'backend_github' && repo !== 'frontend_github' ) throw new Error('Not allowed to get info of this repository') 
       const response = await this.octokit.repos.listBranches({
         owner: this.owner,
         repo: repo,
       });
-      return response.data;
+      return response.data.map((repository)=>repository.name);
     } catch (error) {
       console.error('Error getting commits:', error.message);
-      return [];
+      return {error:error.message};
     }
   }
 
   // eslint-disable-next-line prettier/prettier
   async getCommits( {repo, branch}:GetBranchInterface) {
     try {
+      if ( repo !== 'backend_github' && repo !== 'frontend_github' ) throw new Error('Not allowed to get info of this repository') 
       const response = await this.octokit.repos.listCommits({
         owner: this.owner,
         repo: repo,
@@ -47,7 +42,7 @@ export class GithubService {
       return response.data;
     } catch (error) {
       console.error('Error getting commits:', error.message);
-      return [];
+      return {error:error.message};
     }
   }
 }
