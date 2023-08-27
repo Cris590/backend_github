@@ -11,7 +11,7 @@ export class GithubService {
   constructor() {
     this.owner = 'Cris590';
     this.octokit = new Octokit({
-      auth: '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',
+      auth: process.env.GITHUB_TOKEN,
     });
   }
 
