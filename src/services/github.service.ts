@@ -39,7 +39,17 @@ export class GithubService {
         repo: repo,
         sha: branch, // The branch name or commit SHA
       });
-      return response.data;
+      return response.data.map((repository)=>{
+
+        return {
+          sha:repository.sha,
+          author:repository.commit.author.name,
+          email:repository.commit.author.email,
+          date:repository.commit.author.date,
+          message:repository.commit.message,
+          html_url:repository.html_url
+        }
+      });
     } catch (error) {
       console.error('Error getting commits:', error.message);
       return {error:error.message};
