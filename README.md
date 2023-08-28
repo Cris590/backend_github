@@ -16,14 +16,10 @@ create a .env file ( based on the .env.sample ), then add the value GITHUB_TOKEN
 ## Running the app
 
 ```bash
-# development
-$ npm run start
 
 # watch mode
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
 ```
 
 
